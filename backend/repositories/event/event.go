@@ -15,7 +15,7 @@ type Event struct {
 	ID        int       `db:"event_id"`
 	Name      string    `db:"name"`
 	Location  string    `db:"location"`
-	Date      time.Time `db:"date"`
+	Date      string    `db:"date"`
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
 }

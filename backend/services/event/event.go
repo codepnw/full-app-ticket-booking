@@ -9,16 +9,16 @@ type IEventService interface {
 }
 
 type NewEventRequest struct {
-	Name     string    `json:"name"`
-	Location string    `json:"location"`
-	Date     time.Time `json:"date"`
+	Name     string `json:"name"`
+	Location string `json:"location"`
+	Date     string `json:"date"`
 }
 
 type EventResponse struct {
 	ID        int       `json:"id"`
 	Name      string    `json:"name"`
 	Location  string    `json:"location"`
-	Date      time.Time `json:"date"`
+	Date      string    `json:"date"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

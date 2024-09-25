@@ -48,6 +48,7 @@ func (s *eventService) GetEvent(eventID string) (*EventResponse, error) {
 
 	event, err := s.eventRepo.GetOne(context, eventID)
 	if err != nil {
+		log.Println(err)
 		return nil, errs.NewErrUnexpected()
 	}
 
@@ -75,6 +76,7 @@ func (s *eventService) CreateEvent(request NewEventRequest) (*EventResponse, err
 
 	newEvent, err := s.eventRepo.CreateOne(context, event)
 	if err != nil {
+		log.Println(err)
 		return nil, errs.NewErrUnexpected()
 	}
 

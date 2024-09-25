@@ -7,10 +7,10 @@ import (
 )
 
 type eventRepository struct {
-	db sqlx.DB
+	db *sqlx.DB
 }
 
-func NewEventRepository(db sqlx.DB) IEventRepository {
+func NewEventRepository(db *sqlx.DB) IEventRepository {
 	return &eventRepository{db: db}
 }
 
@@ -31,11 +31,11 @@ func (r *eventRepository) GetOne(ctx context.Context, eventID string) (*Event, e
 	query := `
 		SELECT event_id, name, location, date, created_at, updated_at
 		FROM events
-		WHERE id = $1;
+		WHERE event_id = $1;
 	`
 	event := new(Event)
 
-	if err := r.db.Get(&event, query, eventID); err != nil {
+	if err := r.db.Get(event, query, eventID); err != nil {
 		return nil, err
 	}
 	return event, nil
