@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	eventService "github.com/codepnw/ticket-api/services/event"
 	"github.com/gin-gonic/gin"
@@ -38,7 +39,7 @@ func (h *eventHandler) GetEvent(c *gin.Context) {
 }
 
 func (h *eventHandler) NewEvent(c *gin.Context) {
-	var event eventService.NewEventRequest
+	var event eventService.EventRequest
 
 	if err := c.ShouldBindJSON(&event); err != nil {
 		errorBadRequest(c, err.Error())
@@ -52,4 +53,32 @@ func (h *eventHandler) NewEvent(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, response)
+}
+
+func (h *eventHandler) UpdateEvent(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("event_id"))
+	event := new(eventService.EventRequest)
+
+	if err := c.ShouldBindJSON(event); err != nil {
+		errorBadRequest(c, err.Error())
+		return
+	}
+
+	if err := h.eventSrv.UpdateOne(uint(id), event); err != nil {
+		errorInternalServer(c, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, nil)
+}
+
+func (h *eventHandler) DeleteEvent(c *gin.Context) {
+	id := c.Param("event_id")
+
+	if err := h.eventSrv.DeleteOne(id); err != nil {
+		errorInternalServer(c, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusNoContent, nil)
 }

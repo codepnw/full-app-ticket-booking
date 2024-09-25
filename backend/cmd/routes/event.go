@@ -18,4 +18,6 @@ func EventRoutes(db *sqlx.DB, r *gin.Engine, version string) {
 	g.GET("/", eventHandler.GetEvents)
 	g.GET("/:event_id", eventHandler.GetEvent)
 	g.POST("/", eventHandler.NewEvent)
+	g.PATCH("/:event_id", eventHandler.UpdateEvent)
+	g.DELETE("/:event_id", eventHandler.DeleteEvent)
 }
