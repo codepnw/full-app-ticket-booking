@@ -25,6 +25,7 @@ func main() {
 
 	r.Use(cors.Default())
 	routes.EventRoutes(db, r, version)
+	routes.TicketRoutes(db, r, version)
 
 	r.Run(":" + envConfig.ServerPort)
 }
