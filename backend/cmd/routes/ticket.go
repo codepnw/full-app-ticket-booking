@@ -18,5 +18,5 @@ func TicketRoutes(db *sqlx.DB, r *gin.Engine, version string) {
 	g.GET("/", ticketHandler.GetTickets)
 	g.GET("/:ticket_id", ticketHandler.GetTicket)
 	g.POST("/", ticketHandler.NewTicket)
-	g.PATCH("/:ticket_id", ticketHandler.UpdateTicket)
+	g.PATCH("/:ticket_id/validate", ticketHandler.ValidateTicket)
 }

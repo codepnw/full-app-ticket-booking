@@ -56,11 +56,11 @@ func (h *ticketHandler) NewTicket(c *gin.Context) {
 	c.JSON(http.StatusCreated, ticket)
 }
 
-func (h *ticketHandler) UpdateTicket(c *gin.Context) {
+func (h *ticketHandler) ValidateTicket(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("ticket_id"))
 	data := new(ticketRepository.ValidateTicket)
 
-	if err := h.ticketSrv.UpdateTicket(uint(id), data); err != nil {
+	if err := h.ticketSrv.ValidateTicket(uint(id), data); err != nil {
 		errorInternalServer(c, err.Error())
 		return
 	}

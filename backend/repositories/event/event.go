@@ -13,17 +13,17 @@ type IEventRepository interface {
 }
 
 type Event struct {
-	ID        int    `db:"event_id"`
-	Name      string `db:"name"`
-	Location  string `db:"location"`
-	Date      string `db:"date"`
-	CreatedAt string `db:"created_at"`
-	UpdatedAt string `db:"updated_at"`
+	ID        int    `db:"event_id" json:"eventId"`
+	Name      string `db:"name" json:"name"`
+	Location  string `db:"location" json:"location"`
+	Date      string `db:"date" json:"date"`
+	CreatedAt string `db:"created_at" json:"createdAt"`
+	UpdatedAt string `db:"updated_at" json:"updatedAt"`
 }
 
 type EventUpdateRequest struct {
 	Name      string `json:"name"`
 	Location  string `json:"location"`
 	Date      string `json:"date"`
-	UpdatedAt string `db:"updated_at"`
+	UpdatedAt string `json:"updated_at"`
 }

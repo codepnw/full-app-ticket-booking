@@ -9,6 +9,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var db *sqlx.DB
+
 func InitDatabase(cfg *config.EnvConfig) (*sqlx.DB, error) {
 	dsn := fmt.Sprintf(`
 		host=%s user=%s dbname=%s password=%s sslmode=%s port=%d`,
@@ -20,7 +22,9 @@ func InitDatabase(cfg *config.EnvConfig) (*sqlx.DB, error) {
 		cfg.DBPort,
 	)
 
-	db, err := sqlx.Connect(cfg.DBDriver, dsn)
+	var err error
+
+	db, err = sqlx.Connect(cfg.DBDriver, dsn)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect database: %e", err)
 	}
@@ -31,4 +35,8 @@ func InitDatabase(cfg *config.EnvConfig) (*sqlx.DB, error) {
 
 	log.Println("connected to database!")
 	return db, nil
+}
+
+func GetDB() *sqlx.DB {
+	return db
 }

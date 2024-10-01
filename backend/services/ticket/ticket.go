@@ -9,7 +9,7 @@ type ITicketService interface {
 	GetTickets() ([]*TicketResponse, error)
 	GetTicket(ticketID uint) (*TicketResponse, error)
 	CreateTicket(request TicketRequest) (*TicketResponse, error)
-	UpdateTicket(ticketID uint, validate *ticketRepository.ValidateTicket) error
+	ValidateTicket(ticketID uint, validate *ticketRepository.ValidateTicket) error
 }
 
 type TicketResponse struct {

@@ -14,12 +14,12 @@ type ITicketRepository interface {
 }
 
 type Ticket struct {
-	ID        uint                  `db:"id"`
-	EventID   uint                  `db:"event_id"`
-	Event     eventRepository.Event `db:"event"`
-	Entered   bool                  `db:"entered" default:"false"`
-	CreatedAt string                `db:"created_at"`
-	UpdatedAt string                `db:"updated_at"`
+	ID        uint                  `db:"id" json:"id"`
+	EventID   uint                  `db:"event_id" json:"eventId"`
+	Event     eventRepository.Event `db:"event" json:"event"`
+	Entered   bool                  `db:"entered" default:"false" json:"entered"`
+	CreatedAt string                `db:"created_at" json:"createdAt"`
+	UpdatedAt string                `db:"updated_at" json:"updatedAt"`
 }
 
 type ValidateTicket struct {

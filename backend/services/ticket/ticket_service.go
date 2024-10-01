@@ -5,10 +5,14 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"strconv"
 	"time"
 
+	"github.com/codepnw/ticket-api/cmd/database"
 	"github.com/codepnw/ticket-api/pkg/errs"
+	eventRepository "github.com/codepnw/ticket-api/repositories/event"
 	ticketRepository "github.com/codepnw/ticket-api/repositories/ticket"
+	eventService "github.com/codepnw/ticket-api/services/event"
 )
 
 const timeLayout = "2006-01-02 15:04"
@@ -34,10 +38,24 @@ func (s *ticketService) GetTickets() ([]*TicketResponse, error) {
 	responses := []*TicketResponse{}
 
 	for _, t := range tickets {
+		// Event Data
+		event, err := eventData(int(t.EventID))
+		if err != nil {
+			log.Println(err)
+			return nil, errs.NewErrUnexpected()
+		}
+
 		responses = append(responses, &TicketResponse{
-			ID:        t.ID,
-			EventID:   t.EventID,
-			Event:     t.Event,
+			ID:      t.ID,
+			EventID: t.EventID,
+			Event: eventRepository.Event{
+				ID:        event.ID,
+				Name:      event.Name,
+				Location:  event.Location,
+				Date:      event.Date,
+				CreatedAt: event.CreatedAt,
+				UpdatedAt: event.UpdatedAt,
+			},
 			Entered:   t.Entered,
 			CreatedAt: t.CreatedAt,
 			UpdatedAt: t.UpdatedAt,
@@ -59,10 +77,24 @@ func (s *ticketService) GetTicket(ticketID uint) (*TicketResponse, error) {
 		return nil, errs.NewErrUnexpected()
 	}
 
+	// Event Data
+	event, err := eventData(int(ticket.EventID))
+	if err != nil {
+		log.Println(err)
+		return nil, errs.NewErrUnexpected()
+	}
+
 	response := &TicketResponse{
-		ID:        ticket.ID,
-		EventID:   ticket.EventID,
-		Event:     ticket.Event,
+		ID:      ticket.ID,
+		EventID: ticket.EventID,
+		Event: eventRepository.Event{
+			ID:        event.ID,
+			Name:      event.Name,
+			Location:  event.Location,
+			Date:      event.Date,
+			CreatedAt: event.CreatedAt,
+			UpdatedAt: event.UpdatedAt,
+		},
 		Entered:   ticket.Entered,
 		CreatedAt: ticket.CreatedAt,
 		UpdatedAt: ticket.UpdatedAt,
@@ -74,8 +106,23 @@ func (s *ticketService) CreateTicket(request TicketRequest) (*TicketResponse, er
 	context, cancel := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
 	defer cancel()
 
+	// Event Data
+	event, err := eventData(int(request.EventID))
+	if err != nil {
+		log.Println(err)
+		return nil, errs.NewErrUnexpected()
+	}
+
 	ticket := &ticketRepository.Ticket{
 		EventID: request.EventID,
+		Event: eventRepository.Event{
+			ID:        event.ID,
+			Name:      event.Name,
+			Location:  event.Location,
+			Date:      event.Date,
+			CreatedAt: event.CreatedAt,
+			UpdatedAt: event.UpdatedAt,
+		},
 	}
 
 	t, err := s.ticketRepo.CreateOne(context, ticket)
@@ -96,7 +143,7 @@ func (s *ticketService) CreateTicket(request TicketRequest) (*TicketResponse, er
 	return response, nil
 }
 
-func (s *ticketService) UpdateTicket(ticketID uint, validate *ticketRepository.ValidateTicket) error {
+func (s *ticketService) ValidateTicket(ticketID uint, validate *ticketRepository.ValidateTicket) error {
 	context, cancel := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
 	defer cancel()
 
@@ -110,4 +157,16 @@ func (s *ticketService) UpdateTicket(ticketID uint, validate *ticketRepository.V
 		return errs.NewErrUnexpected()
 	}
 	return nil
+}
+
+func eventData(eventID int) (*eventService.EventResponse, error) {
+	eventRepo := eventRepository.NewEventRepository(database.GetDB())
+	eventSrv := eventService.NewEventService(eventRepo)
+
+	event, err := eventSrv.GetEvent(strconv.Itoa(eventID))
+	if err != nil {
+		return nil, err
+	}
+
+	return event, nil
 }
