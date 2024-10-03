@@ -62,3 +62,37 @@ func (h *userHandler) GetProfile(c *gin.Context) {
 
 	c.JSON(http.StatusOK, user)
 }
+
+func (h *userHandler) SignIn(c *gin.Context) {
+	req := new(models.UserCredential)
+
+	if err := c.ShouldBindJSON(req); err != nil {
+		errorBadRequest(c, err.Error())
+		return
+	}
+
+	passport, err := h.userSrv.GetPassport(req)
+	if err != nil {
+		errorInternalServer(c, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, passport)
+}
+
+func (h *userHandler) RefreshPassport(c *gin.Context) {
+	req := new(models.UserRefreshCredential)
+
+	if err := c.ShouldBindJSON(req); err != nil {
+		errorBadRequest(c, err.Error())
+		return
+	}
+
+	passport, err := h.userSrv.RefreshPassport(req)
+	if err != nil {
+		errorInternalServer(c, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, passport)
+}

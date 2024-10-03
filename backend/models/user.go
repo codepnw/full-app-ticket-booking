@@ -43,13 +43,35 @@ type UserCredential struct {
 	Password string `json:"password"`
 }
 
+type UserCredentialCheck struct {
+	ID       uint   `json:"id"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Username string `json:"username"`
+	Role     int    `json:"role"`
+}
+
 type UserPassport struct {
 	User  *User      `json:"user"`
 	Token *UserToken `json:"token"`
 }
 
 type UserToken struct {
-	Id           string `json:"id"`
-	AccessToken  string `json:"access_token"`
+	Id           uint   `db:"id" json:"id"`
+	AccessToken  string `db:"access_token" json:"access_token"`
+	RefreshToken string `db:"refresh_token" json:"refresh_token"`
+}
+
+type UserClaims struct {
+	Id     uint `db:"id" json:"id"`
+	RoleId int  `db:"role" json:"role"`
+}
+
+type UserRefreshCredential struct {
 	RefreshToken string `json:"refresh_token"`
+}
+
+type Oauth struct {
+	Id     uint `db:"id" json:"id"`
+	UserId uint `db:"user_id" json:"user_id"`
 }
