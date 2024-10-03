@@ -17,10 +17,10 @@ type EnvConfig struct {
 	DBSSLMode  string `env:"DB_SSLMODE,required"`
 	DBPort     int    `env:"DB_PORT,required"`
 
-	JWTSecretKey string `env:"JWT_SECRET_KEY",required`
-	JWTAdminKey  string `env:"JWT_ADMIN_KEY",required`
-	JWTApiKey    string `env:"JWT_API_KEY",required`
-	JWTExp       int    `env:"JWT_EXP"`
+	JWTSecretKey string `env:"JWT_SECRET_KEY,required"`
+	JWTAdminKey  string `env:"JWT_ADMIN_KEY,required"`
+	JWTApiKey    string `env:"JWT_API_KEY,required"`
+	JWTExp       int    `env:"JWT_EXP,required"`
 }
 
 func NewEnvConfig(envFile string) *EnvConfig {
